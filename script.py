@@ -2,6 +2,7 @@
 import datetime
 blockchains = []
 n = 0
+
 # ---------- BLOCK CLASS ----------
 class Block:
     def __init__(self, sender, money, receiver, previous_block=None):
