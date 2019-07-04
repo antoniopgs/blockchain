@@ -84,23 +84,17 @@ class Blockchain:
         self.tail_block = new_block
 
     def view(self):
-        if not self.tail_block:
-            print("There are no Blocks in this Blockchain.\n")
+        if not [block for block in self]:
+            print("This Blockchain is empty.\n")
         else:
-            current_block = self.tail_block
-            while True:
-                print(current_block)
-                if not current_block.previous_block:
-                    break
-                else:
-                    current_block = current_block.previous_block
+            for block in self:
+                print(block)
 
 
 # ---------- TESTS ----------
-"""
 # Testing my iterator with an empty Blockchain:
 blockchain_1 = Blockchain()
-blockchain_1.view()"""
+blockchain_1.view()
 
 # Testing my iterator with non empty Blockchain:
 blockchain_2 = Blockchain()
@@ -108,8 +102,4 @@ blockchain_2.add_block("António", 200000, "Tim")
 blockchain_2.add_block("António", 100000, "Bob")
 blockchain_2.add_block("António", 50000, "John")
 blockchain_2.add_block("António", 50000, "Bill")
-for block in blockchain_2:
-    print(block)
-
-for block in blockchain_2:
-    print(block)
+blockchain_2.view()
