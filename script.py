@@ -1,7 +1,18 @@
 # ---------- DEPENDENCIES AND OTHERS ----------
 import datetime
+users = []
 blockchains = []
 n = 0
+
+# ---------- USER CLASS ----------
+class User:
+    def __init__(self, name, balance):
+        self.name = name
+        self.balance = balance
+        users.append(self)
+
+    def __repr__(self):
+        return f"User: {self.name}\nBalance: {self.balance}€\n"
 
 # ---------- BLOCK CLASS ----------
 class Block:
@@ -15,9 +26,9 @@ class Block:
     def __repr__(self):
         return f"""> NEW BLOCK:
 Time: {self.time}
-Sender: {self.sender}
-Money: {self.money}
-Receiver: {self.receiver}
+Sender: {self.sender.name}
+Money: {self.money}€
+Receiver: {self.receiver.name}
 """
 
 
@@ -75,14 +86,28 @@ class Blockchain:
         return f"{self.name}"
 
     def add_block(self, new_block_sender, new_block_money, new_block_receiver):
-        # Check to see if Blockchain is empty
-        if not self.tail_block:
-            new_block = Block(new_block_sender, new_block_money, new_block_receiver)
-        # If it's not empty, the new block's "previous block" will be the existing "tail block"
+        if new_block_sender in users:
+            if new_block_receiver in users:
+                if new_block_sender != new_block_receiver:
+                    if new_block_money <= new_block_sender.balance:
+                        new_block_sender.balance -= new_block_money
+                        new_block_receiver.balance += new_block_money
+                        # Check to see if Blockchain is empty
+                        if not self.tail_block:
+                            new_block = Block(new_block_sender, new_block_money, new_block_receiver)
+                        # If it's not empty, the new block's "previous block" will be the existing "tail block"
+                        else:
+                            new_block = Block(new_block_sender, new_block_money, new_block_receiver, self.tail_block)
+                        # Update "Tail Block" to the newly created block
+                        self.tail_block = new_block
+                    else:
+                        print("ERROR: Insufficient Sender funds.\n")
+                else:
+                    print("ERROR: Sender and Receiver must be different.\n")
+            else:
+                print("ERROR: Invalid Receiver.\n")
         else:
-            new_block = Block(new_block_sender, new_block_money, new_block_receiver, self.tail_block)
-        # Update "Tail Block" to the newly created block
-        self.tail_block = new_block
+            print("ERROR: Invalid Sender.\n")
 
     def view(self):
         if not [block for block in self]:
@@ -91,16 +116,16 @@ class Blockchain:
             for block in self:
                 print(block)
 
+# TESTS
+antonio = User("António", 5000)
+bob = User("Bob", 60)
+william = User("William", 9000)
+tim = User("Tim", 3200)
+john = User("John", 4300)
 
-# ---------- TESTS ----------
-# Testing my iterator with an empty Blockchain:
 blockchain_1 = Blockchain()
+print(antonio.balance)
+blockchain_1.add_block(antonio, 20, john)
+print(antonio.balance)
 blockchain_1.view()
 
-# Testing my iterator with non empty Blockchain:
-blockchain_2 = Blockchain()
-blockchain_2.add_block("António", 200000, "Tim")
-blockchain_2.add_block("António", 100000, "Bob")
-blockchain_2.add_block("António", 50000, "John")
-blockchain_2.add_block("António", 50000, "Bill")
-blockchain_2.view()
