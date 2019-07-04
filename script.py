@@ -2,7 +2,6 @@
 import datetime
 blockchains = []
 n = 0
-
 # ---------- BLOCK CLASS ----------
 class Block:
     def __init__(self, sender, money, receiver, previous_block=None):
@@ -65,6 +64,8 @@ class Blockchain:
                 for i in range(n-1):
                     current_block = current_block.previous_block
                 if not current_block:
+                    # Reset "n" to 0, so that next iteration works the same:
+                    n = 0
                     raise StopIteration
                 else:
                     return current_block
@@ -96,11 +97,12 @@ class Blockchain:
 
 
 # ---------- TESTS ----------
-# Testing out my iterator with an empty Blockchain
+"""
+# Testing my iterator with an empty Blockchain:
 blockchain_1 = Blockchain()
-for block in blockchain_1:
-    print(block)
+blockchain_1.view()"""
 
+# Testing my iterator with non empty Blockchain:
 blockchain_2 = Blockchain()
 blockchain_2.add_block("António", 200000, "Tim")
 blockchain_2.add_block("António", 100000, "Bob")
@@ -109,3 +111,5 @@ blockchain_2.add_block("António", 50000, "Bill")
 for block in blockchain_2:
     print(block)
 
+for block in blockchain_2:
+    print(block)
